@@ -2,328 +2,315 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "OwnerTag": {
+            "defaultValue": "Operations",
+            "type": "String",
+            "metadata": {
+                "description": "Tags all resources created with Owner's name"
+            }
+        },
+        "EmailTag": {
+            "defaultValue": "operations@contoso.com",
+            "type": "String",
+            "metadata": {
+                "description": "Tags all resources created with Owner's Email"
+            }
+        },
         "ProdVNetName": {
-            "type": "string",
             "defaultValue": "PrdVirtualNetwork",
+            "type": "String",
             "metadata": {
                 "description": "Name of the Production Virtual Network"
             }
         },
-        "ProdVNetPrefix":{
-            "type": "string",
-            "defaultValue": "10.0.0.0/21",
+        "ProdVNetPrefix": {
+            "defaultValue": "10.0.0.0/22",
+            "type": "String",
             "metadata": {
                 "description": "This is the address space used to create the Production VNET"
             }
         },
         "deploydev": {
-            "type": "string",
             "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
             ],
+            "type": "String",
             "metadata": {
-              "description": "Enables deployment of Development Environment"
+                "description": "Enables deployment of Development Environment"
             }
         },
         "DevVNetName": {
-            "type": "string",
             "defaultValue": "DevVirtualNetwork",
+            "type": "String",
             "metadata": {
                 "description": "Name of the Production Virtual Network"
             }
         },
-        "DevVNetPrefix":{
-            "type": "string",
-            "defaultValue": "10.0.8.0/21",
+        "DevVNetPrefix": {
+            "defaultValue": "10.0.4.0/22",
+            "type": "String",
             "metadata": {
                 "description": "This is the address space used to create the Development VNET"
             }
         },
         "DevSubscriptionId": {
-            "type": "string",
             "defaultValue": "",
+            "type": "String",
             "metadata": {
                 "description": "Subscription ID in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
             }
         },
         "DevResourceGroup": {
-            "type": "string",
             "defaultValue": "dev_netw_rg",
+            "type": "String",
             "metadata": {
                 "description": "Resource Group for Development subscription Network Infrastructure"
             }
         },
+        "deployazurefirewall": {
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Enables deployment of Azure Firewall"
+            }
+        },
         "VNetGatewayName": {
-            "type": "string",
             "defaultValue": "VirtualNetworkGateway",
+            "type": "String",
             "metadata": {
                 "description": "Name of the Virtual Network Gateway"
             }
         },
         "LocalNetworkGatewayName": {
-            "type": "string",
             "defaultValue": "LocalNetworkGateway",
+            "type": "String",
             "metadata": {
                 "description": "Name of the Local Network Gateway"
             }
         },
         "LocalNetworkGatewayAddressSpace": {
-            "type": "array",
-            "defaultValue": ["10.0.0.0/8","172.16.0.0/12","192.168.0.0/16"],
+            "defaultValue": [
+                "10.0.0.0/8",
+                "172.16.0.0/12",
+                "192.168.0.0/16"
+            ],
+            "type": "Array",
             "metadata": {
                 "description": "Array of CIDR Prefixes for Local Network Gateway"
             }
         },
         "LocalNetworkGatewayIP": {
-            "type": "string",
             "defaultValue": "0.0.0.0",
+            "type": "String",
             "metadata": {
                 "description": "IP of the VPN Peer that the Local Network Gateway will connect to"
             }
         },
+        "AzureFirewallName": {
+            "defaultValue": "AzureFirewall",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the Azure Firewall"
+            }
+        },
         "GatewaySubnetPrefix": {
-            "type": "string",
             "defaultValue": "10.0.0.0/27",
+            "type": "String",
             "metadata": {
                 "description": "Address space for the Production Subscription Gateway Subnet"
             }
         },
         "GatewayRouteTableName": {
-            "type": "string",
             "defaultValue": "prd_rt_gateway",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Production Subscription Gateway Subnet's Route Table"
             }
         },
+        "AzureFirewallSubnetPrefix": {
+            "defaultValue": "10.0.0.64/26",
+            "type": "String",
+            "metadata": {
+                "description": "Address space for the Production Subscription Azure Firewall Subnet"
+            }
+        },
+        "AzureFirewallRouteTableName": {
+            "defaultValue": "prd_rt_azurefirewall",
+            "type": "String",
+            "metadata": {
+                "description": "Name for the Production Subscription Azure Firewall Subnet's Route Table"
+            }
+        },
         "AppGatewaySubnetName": {
-            "type": "string",
             "defaultValue": "AppGateway",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Production Subscription Application Gateway Subnet"
             }
         },
         "AppGatewaySubnetPrefix": {
-            "type": "string",
             "defaultValue": "10.0.0.32/27",
+            "type": "String",
             "metadata": {
                 "description": "Address space for the Production Subscription Application Gateway Subnet"
             }
         },
         "AppGatewayRouteTableName": {
-            "type": "string",
             "defaultValue": "prd_rt_appgateway",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Production Subscription AppGateway Subnet's Route Table"
             }
         },
-        "ManagementSubnetName": {
-            "type": "string",
-            "defaultValue": "Management",
-            "metadata": {
-                "description": "Name for the Production Subscription Management Subnet"
-            }
-        },
-        "ManagementSubnetPrefix": {
-            "type": "string",
-            "defaultValue": "10.0.0.64/27",
-            "metadata": {
-                "description": "Address space for the Production Subscription Management Subnet"
-            }
-        },
-        "ManagementRouteTableName": {
-            "type": "string",
-            "defaultValue": "prd_rt_management",
-            "metadata": {
-                "description": "Name for the Production Subscription Management Subnet's Route Table"
-            }
-        },
-        "OutsideSubnetName": {
-            "type": "string",
-            "defaultValue": "Outside",
-            "metadata": {
-                "description": "Name for the Production Subscription Outside/On-Prem Subnet"
-            }
-        },
-        "OutsideSubnetPrefix": {
-            "type": "string",
-            "defaultValue": "10.0.0.96/27",
-            "metadata": {
-                "description": "Address space for the Production Subscription Outside/On-Prem Subnet"
-            }
-        },
-        "PrivateSubnetNameName": {
-            "type": "string",
-            "defaultValue": "Private",
-            "metadata": {
-                "description": "Name for the Production Subscription Private Subnet"
-            }
-        },
-        "PrivateSubnetPrefix": {
-            "type": "string",
-            "defaultValue": "10.0.0.128/27",
-            "metadata": {
-                "description": "Address space for the Production Subscription Private Subnet"
-            }
-        },
-        "PublicSubnetName": {
-            "type": "string",
-            "defaultValue": "Public",
-            "metadata": {
-                "description": "Name for the Production Subscription Public Subnet"
-            }
-        },
-        "PublicSubnetPrefix": {
-            "type": "string",
-            "defaultValue": "10.0.0.160/27",
-            "metadata": {
-                "description": "Address space for the Production Subscription Public Subnet"
-            }
-        },
         "ADSubnetName": {
-            "type": "string",
             "defaultValue": "AD",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Production Subscription AD Subnet"
             }
         },
         "ADSubnetPrefix": {
-            "type": "string",
             "defaultValue": "10.0.0.192/27",
+            "type": "String",
             "metadata": {
                 "description": "Address space for the Production Subscription AD Subnet"
             }
         },
         "ADRouteTableName": {
-            "type": "string",
             "defaultValue": "prd_rt_ad",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Production Subscription AD Subnet's Route Table"
             }
         },
         "PrdApplicationSubnetName": {
-            "type": "string",
             "defaultValue": "Apps",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Production Subscription Application Subnet"
             }
         },
         "PrdApplicationSubnetPrefix": {
-            "type": "string",
             "defaultValue": "10.0.1.0/24",
+            "type": "String",
             "metadata": {
                 "description": "Address space for the Production Subscription Application Subnet"
             }
         },
         "PrdApplicationRouteTableName": {
-            "type": "string",
             "defaultValue": "prd_rt_apps",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Production Subscription Apps Subnet's Route Table"
             }
         },
         "PrdDataSubnetName": {
-            "type": "string",
             "defaultValue": "Data",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Production Subscription Data Subnet"
             }
         },
         "PrdDataSubnetPrefix": {
-            "type": "string",
             "defaultValue": "10.0.2.0/24",
+            "type": "String",
             "metadata": {
                 "description": "Address space for the Production Subscription Data Subnet"
             }
         },
         "PrdDataRouteTableName": {
-            "type": "string",
             "defaultValue": "prd_rt_data",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Production Subscription Data Subnet's Route Table"
             }
         },
         "PrdWebSubnetName": {
-            "type": "string",
             "defaultValue": "Web",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Production Subscription Web Subnet"
             }
         },
         "PrdWebSubnetPrefix": {
-            "type": "string",
             "defaultValue": "10.0.3.0/24",
+            "type": "String",
             "metadata": {
                 "description": "Address space for the Production Subscription Web Subnet"
             }
         },
         "PrdWebRouteTableName": {
-            "type": "string",
             "defaultValue": "prd_rt_web",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Production Subscription Web Subnet's Route Table"
             }
         },
         "DevApplicationSubnetName": {
-            "type": "string",
             "defaultValue": "Apps",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Development Subscription Application Subnet"
             }
         },
         "DevApplicationSubnetPrefix": {
-            "type": "string",
-            "defaultValue": "10.0.9.0/24",
+            "defaultValue": "10.0.5.0/24",
+            "type": "String",
             "metadata": {
                 "description": "Address space for the Development Subscription Application Subnet"
             }
         },
         "DevApplicationRouteTableName": {
-            "type": "string",
             "defaultValue": "dev_rt_apps",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Development Subscription Apps Subnet's Route Table"
             }
         },
         "DevDataSubnetName": {
-            "type": "string",
             "defaultValue": "Data",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Development Subscription Data Subnet"
             }
         },
         "DevDataSubnetPrefix": {
-            "type": "string",
-            "defaultValue": "10.0.10.0/24",
+            "defaultValue": "10.0.6.0/24",
+            "type": "String",
             "metadata": {
                 "description": "Address space for the Development Subscription Data Subnet"
             }
         },
         "DevDataRouteTableName": {
-            "type": "string",
             "defaultValue": "dev_rt_data",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Development Subscription Data Subnet's Route Table"
             }
         },
         "DevWebSubnetName": {
-            "type": "string",
             "defaultValue": "Web",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Development Subscription Web Subnet"
             }
         },
         "DevWebSubnetPrefix": {
-            "type": "string",
-            "defaultValue": "10.0.11.0/24",
+            "defaultValue": "10.0.7.0/24",
+            "type": "String",
             "metadata": {
                 "description": "Address space for the Development Subscription Web Subnet"
             }
         },
         "DevWebRouteTableName": {
-            "type": "string",
             "defaultValue": "dev_rt_web",
+            "type": "String",
             "metadata": {
                 "description": "Name for the Development Subscription Web Subnet's Route Table"
             }
@@ -331,8 +318,8 @@
     },
     "variables": {
         "GatewayRouteName": "[toLower(concat(parameters('GatewayRouteTableName'),'_',replace(parameters('GatewaySubnetPrefix'),'/','_')))]",
+        "AzureFirewallRouteName": "[toLower(concat(parameters('AzureFirewallRouteTableName'),'_',replace(parameters('AzureFirewallSubnetPrefix'),'/','_')))]",
         "AppGatewayRouteName": "[toLower(concat(parameters('AppGatewayRouteTableName'),'_',replace(parameters('AppGatewaySubnetPrefix'),'/','_')))]",
-        "ManagementRouteName": "[toLower(concat(parameters('ManagementRouteTableName'),'_',replace(parameters('ManagementSubnetPrefix'),'/','_')))]",
         "ADRouteName": "[toLower(concat(parameters('ADRouteTableName'),'_',replace(parameters('ADSubnetPrefix'),'/','_')))]",
         "PrdApplicationRouteName": "[toLower(concat(parameters('PrdApplicationRouteTableName'),'_',replace(parameters('PrdApplicationSubnetPrefix'),'/','_')))]",
         "PrdDataRouteName": "[toLower(concat(parameters('PrdDataRouteTableName'),'_',replace(parameters('PrdDataSubnetPrefix'),'/','_')))]",
@@ -341,6 +328,7 @@
         "DevDataRouteName": "[toLower(concat(parameters('DevDataRouteTableName'),'_',replace(parameters('DevDataSubnetPrefix'),'/','_')))]",
         "DevWebRouteName": "[toLower(concat(parameters('DevWebRouteTableName'),'_',replace(parameters('DevWebSubnetPrefix'),'/','_')))]",
         "VNetGatewayPIPName": "[concat(parameters('VNetGatewayName'),'_pip')]",
+        "AzureFirewallPIPName": "[concat(parameters('AzureFirewallName'),'_pip')]",
         "GatewaySubnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks',parameters('ProdVNetName')),'/subnets/','GatewaySubnet')]",
         "ProdSubID": "[subscription().subscriptionId]",
         "ProdRGName": "[resourceGroup().name]",
@@ -348,12 +336,13 @@
     },
     "resources": [
         {
-            "name": "[parameters('ProdVNetName')]",
             "type": "Microsoft.Network/virtualNetworks",
-            "location": "[resourceGroup().location]",
+            "name": "[parameters('ProdVNetName')]",
             "apiVersion": "2015-06-15",
-            "dependsOn": [],
+            "location": "[resourceGroup().location]",
             "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
             },
             "properties": {
                 "addressSpace": {
@@ -369,33 +358,15 @@
                         }
                     },
                     {
+                        "name": "AzureFirewallSubnet",
+                        "properties": {
+                            "addressPrefix": "[parameters('AzureFirewallSubnetPrefix')]"
+                        }
+                    },
+                    {
                         "name": "[parameters('AppGatewaySubnetName')]",
                         "properties": {
                             "addressPrefix": "[parameters('AppGatewaySubnetPrefix')]"
-                        }
-                    },
-                    {
-                        "name": "[parameters('ManagementSubnetName')]",
-                        "properties": {
-                            "addressPrefix": "[parameters('ManagementSubnetPrefix')]"
-                        }
-                    },
-                    {
-                        "name": "[parameters('OutsideSubnetName')]",
-                        "properties": {
-                            "addressPrefix": "[parameters('OutsideSubnetPrefix')]"
-                        }
-                    },
-                    {
-                        "name": "[parameters('PrivateSubnetNameName')]",
-                        "properties": {
-                            "addressPrefix": "[parameters('PrivateSubnetPrefix')]"
-                        }
-                    },
-                    {
-                        "name": "[parameters('PublicSubnetName')]",
-                        "properties": {
-                            "addressPrefix": "[parameters('PublicSubnetPrefix')]"
                         }
                     },
                     {
@@ -423,25 +394,143 @@
                         }
                     }
                 ]
+            },
+            "dependsOn": []
+        },
+        {
+            "condition": "[equals(parameters('deployazurefirewall'),'Yes')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('AzureFirewallPIPName')]",
+            "apiVersion": "2017-10-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
+            },
+              "sku": {
+                "name": "Standard",
+                "tier": "Regional"
+            },
+            "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "ipTags": []
             }
         },
         {
-            "name": "[concat(parameters('ProdVNetName'),'/',parameters('ProdVNetName'),'_to_',parameters('DevVNetName'),'_peering')]",
+            "condition": "[equals(parameters('deployazurefirewall'),'Yes')]",
+            "type": "Microsoft.Network/azureFirewalls",
+            "name": "[parameters('AzureFirewallName')]",
+            "apiVersion": "2018-10-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
+            },
+            "properties": {
+                "provisioningState": "Succeeded",
+                "ipConfigurations": [
+                    {
+                        "name": "IpConf",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('AzureFirewallPIPName'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('ProdVNetName'), 'AzureFirewallSubnet')]"
+                            }
+                        }
+                    }
+                ],
+                "networkRuleCollections": [
+                    {
+                        "name": "Base_Rules",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "priority": 1000,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "AnyRDP",
+                                    "protocols": [
+                                        "TCP"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationPorts": [
+                                        "3389"
+                                    ]
+                                },
+                                {
+                                    "name": "Web Browsing",
+                                    "protocols": [
+                                        "TCP"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationPorts": [
+                                        "80",
+                                        "443"
+                                    ]
+                                },
+                                {
+                                    "name": "Intrazone",
+                                    "protocols": [
+                                        "Any"
+                                    ],
+                                    "sourceAddresses": [
+                                        "[parameters('ProdVNetPrefix')]",
+                                        "[parameters('DevVNetPrefix')]"
+                                    ],
+                                    "destinationAddresses": [
+                                        "[parameters('ProdVNetPrefix')]",
+                                        "[parameters('DevVNetPrefix')]"
+                                    ],
+                                    "destinationPorts": [
+                                        "*"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "applicationRuleCollections": [],
+                "natRuleCollections": []
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('AzureFirewallPIPName'))]",
+                "[variables('ProdVNetID')]"
+            ]
+        },
+        {
             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "name": "[concat(parameters('ProdVNetName'),'/',parameters('ProdVNetName'),'_to_',parameters('DevVNetName'),'_peering')]",
             "apiVersion": "2017-10-01",
             "properties": {
-              "allowVirtualNetworkAccess": "true",
-              "allowForwardedTraffic": "true",
-              "allowGatewayTransit": "true",
-              "useRemoteGateways": "false",
-              "remoteVirtualNetwork": {
-                "id": "[resourceId(parameters('DevSubscriptionId'),parameters('DevResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('DevVNetName'))]"
-              },
-              "remoteAddressSpace": {
-                "addressPrefixes": [
-                  "[parameters('DevVNetPrefix')]"
-                ]
-              }
+                "allowVirtualNetworkAccess": "true",
+                "allowForwardedTraffic": "true",
+                "allowGatewayTransit": "true",
+                "useRemoteGateways": "false",
+                "remoteVirtualNetwork": {
+                    "id": "[resourceId(parameters('DevSubscriptionId'),parameters('DevResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('DevVNetName'))]"
+                },
+                "remoteAddressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('DevVNetPrefix')]"
+                    ]
+                }
             },
             "dependsOn": [
                 "[concat('Microsoft.Resources/deployments/', 'Nested_DevelopmentResources')]",
@@ -450,48 +539,60 @@
             ]
         },
         {
-            "apiVersion": "2017-10-01",
             "type": "Microsoft.Network/publicIPAddresses",
             "name": "[variables('VNetGatewayPIPName')]",
+            "apiVersion": "2017-10-01",
             "location": "[resourceGroup().location]",
+            "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
+            },
             "properties": {
-              "publicIPAllocationMethod": "Dynamic"
+                "publicIPAllocationMethod": "Dynamic"
             }
         },
         {
-            "apiVersion": "2017-10-01",
             "type": "Microsoft.Network/virtualNetworkGateways",
             "name": "[parameters('VNetGatewayName')]",
+            "apiVersion": "2017-10-01",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-              "[concat('Microsoft.Network/publicIPAddresses/', variables('VNetGatewayPIPName'))]",
-              "[concat('Microsoft.Network/virtualNetworks/', parameters('ProdVNetName'))]"
-            ],
+            "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
+            },
             "properties": {
-              "ipConfigurations": [
-                {
-                  "properties": {
-                    "privateIPAllocationMethod": "Dynamic",
-                    "subnet": {
-                      "id": "[variables('GatewaySubnetRef')]"
-                    },
-                    "publicIPAddress": {
-                      "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('VNetGatewayPIPName'))]"
+                "ipConfigurations": [
+                    {
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('GatewaySubnetRef')]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('VNetGatewayPIPName'))]"
+                            }
+                        },
+                        "name": "[concat(parameters('VNetGatewayName'),'ipconfig')]"
                     }
-                  },
-                  "name": "[concat(parameters('VNetGatewayName'),'ipconfig')]"
-                }
-              ],
-              "gatewayType": "Vpn",
-              "vpnType": "RouteBased",
-              "enableBgp": "false"
-            }
+                ],
+                "gatewayType": "Vpn",
+                "vpnType": "RouteBased",
+                "enableBgp": "false"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('VNetGatewayPIPName'))]",
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('ProdVNetName'))]"
+            ]
         },
         {
             "type": "Microsoft.Network/localNetworkGateways",
             "name": "[parameters('LocalNetworkGatewayName')]",
             "apiVersion": "2017-10-01",
             "location": "[resourceGroup().location]",
+            "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
+            },
             "properties": {
                 "gatewayIpAddress": "[parameters('LocalNetworkGatewayIP')]",
                 "localNetworkAddressSpace": {
@@ -505,7 +606,10 @@
             "name": "[parameters('GatewayRouteTableName')]",
             "apiVersion": "2018-01-01",
             "location": "[resourceGroup().location]",
-            "scale": null,
+            "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
+            },
             "properties": {
                 "provisioningState": "Succeeded",
                 "disableBgpRoutePropagation": false,
@@ -533,15 +637,6 @@
                         "properties": {
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('AppGatewaySubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "1.1.1.1"
-                        }
-                    },
-                    {
-                        "name": "[variables('ManagementRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('ManagementSubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "1.1.1.1"
                         }
@@ -622,6 +717,31 @@
                         "properties": {
                             "provisioningState": "Succeeded",
                             "addressPrefix": "23.97.0.0/20",
+                            "nextHopType": "Internet"
+                        }
+                    }
+                ]
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Network/routeTables",
+            "name": "[parameters('AzureFirewallRouteTableName')]",
+            "apiVersion": "2018-01-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
+            },
+            "properties": {
+                "provisioningState": "Succeeded",
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "Default",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "addressPrefix": "0.0.0.0/0",
                             "nextHopType": "Internet"
                         }
                     }
@@ -634,136 +754,10 @@
             "name": "[parameters('AppGatewayRouteTableName')]",
             "apiVersion": "2018-01-01",
             "location": "[resourceGroup().location]",
-            "scale": null,
-            "properties": {
-                "provisioningState": "Succeeded",
-                "disableBgpRoutePropagation": false,
-                "routes": [
-                    {
-                        "name": "Default",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "0.0.0.0/0",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "2.2.2.2"
-                        }
-                    },
-                    {
-                        "name": "[variables('GatewayRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('GatewaySubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "2.2.2.2"
-                        }
-                    },
-                    {
-                        "name": "[variables('AppGatewayRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('AppGatewaySubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "2.2.2.2"
-                        }
-                    },
-                    {
-                        "name": "[variables('ManagementRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('ManagementSubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "2.2.2.2"
-                        }
-                    },
-                    {
-                        "name": "[variables('ADRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('ADSubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "2.2.2.2"
-                        }
-                    },
-                    {
-                        "name": "[variables('PrdApplicationRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('PrdApplicationSubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "2.2.2.2"
-                        }
-                    },
-                    {
-                        "name": "[variables('PrdDataRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('PrdDataSubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "2.2.2.2"
-                        }
-                    },
-                    {
-                        "name": "[variables('PrdWebRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('PrdWebSubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "2.2.2.2"
-                        }
-                    },
-                    {
-                        "name": "[variables('DevApplicationRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('DevApplicationSubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "2.2.2.2"
-                        }
-                    },
-                    {
-                        "name": "[variables('DevDataRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('DevDataSubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "2.2.2.2"
-                        }
-                    },
-                    {
-                        "name": "[variables('DevWebRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('DevWebSubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "2.2.2.2"
-                        }
-                    },
-                    {
-                        "name": "AzureEventHub",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "52.244.48.85/32",
-                            "nextHopType": "Internet"
-                        }
-                    },
-                    {
-                        "name": "AzureCloud",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "23.97.0.0/20",
-                            "nextHopType": "Internet"
-                        }
-                    }
-                ]
+            "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
             },
-            "dependsOn": []
-        },
-        {
-            "type": "Microsoft.Network/routeTables",
-            "name": "[parameters('ManagementRouteTableName')]",
-            "apiVersion": "2018-01-01",
-            "location": "[resourceGroup().location]",
-            "scale": null,
             "properties": {
                 "provisioningState": "Succeeded",
                 "disableBgpRoutePropagation": false,
@@ -774,7 +768,7 @@
                             "provisioningState": "Succeeded",
                             "addressPrefix": "0.0.0.0/0",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "1.1.1.1"
+                            "nextHopIpAddress": "2.2.2.2"
                         }
                     },
                     {
@@ -783,7 +777,7 @@
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('GatewaySubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "1.1.1.1"
+                            "nextHopIpAddress": "2.2.2.2"
                         }
                     },
                     {
@@ -792,16 +786,7 @@
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('AppGatewaySubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "1.1.1.1"
-                        }
-                    },
-                    {
-                        "name": "[variables('ManagementRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('ManagementSubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "1.1.1.1"
+                            "nextHopIpAddress": "2.2.2.2"
                         }
                     },
                     {
@@ -810,7 +795,7 @@
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('ADSubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "1.1.1.1"
+                            "nextHopIpAddress": "2.2.2.2"
                         }
                     },
                     {
@@ -819,7 +804,7 @@
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('PrdApplicationSubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "1.1.1.1"
+                            "nextHopIpAddress": "2.2.2.2"
                         }
                     },
                     {
@@ -828,7 +813,7 @@
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('PrdDataSubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "1.1.1.1"
+                            "nextHopIpAddress": "2.2.2.2"
                         }
                     },
                     {
@@ -837,7 +822,7 @@
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('PrdWebSubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "1.1.1.1"
+                            "nextHopIpAddress": "2.2.2.2"
                         }
                     },
                     {
@@ -846,7 +831,7 @@
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('DevApplicationSubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "1.1.1.1"
+                            "nextHopIpAddress": "2.2.2.2"
                         }
                     },
                     {
@@ -855,7 +840,7 @@
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('DevDataSubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "1.1.1.1"
+                            "nextHopIpAddress": "2.2.2.2"
                         }
                     },
                     {
@@ -864,7 +849,7 @@
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('DevWebSubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "1.1.1.1"
+                            "nextHopIpAddress": "2.2.2.2"
                         }
                     },
                     {
@@ -892,7 +877,10 @@
             "name": "[parameters('ADRouteTableName')]",
             "apiVersion": "2018-01-01",
             "location": "[resourceGroup().location]",
-            "scale": null,
+            "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
+            },
             "properties": {
                 "provisioningState": "Succeeded",
                 "disableBgpRoutePropagation": false,
@@ -920,15 +908,6 @@
                         "properties": {
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('AppGatewaySubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "3.3.3.3"
-                        }
-                    },
-                    {
-                        "name": "[variables('ManagementRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('ManagementSubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "3.3.3.3"
                         }
@@ -1021,7 +1000,10 @@
             "name": "[parameters('PrdApplicationRouteTableName')]",
             "apiVersion": "2018-01-01",
             "location": "[resourceGroup().location]",
-            "scale": null,
+            "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
+            },
             "properties": {
                 "provisioningState": "Succeeded",
                 "disableBgpRoutePropagation": false,
@@ -1049,15 +1031,6 @@
                         "properties": {
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('AppGatewaySubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "3.3.3.3"
-                        }
-                    },
-                    {
-                        "name": "[variables('ManagementRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('ManagementSubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "3.3.3.3"
                         }
@@ -1150,7 +1123,10 @@
             "name": "[parameters('PrdDataRouteTableName')]",
             "apiVersion": "2018-01-01",
             "location": "[resourceGroup().location]",
-            "scale": null,
+            "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
+            },
             "properties": {
                 "provisioningState": "Succeeded",
                 "disableBgpRoutePropagation": false,
@@ -1178,15 +1154,6 @@
                         "properties": {
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('AppGatewaySubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "3.3.3.3"
-                        }
-                    },
-                    {
-                        "name": "[variables('ManagementRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('ManagementSubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "3.3.3.3"
                         }
@@ -1279,7 +1246,10 @@
             "name": "[parameters('PrdWebRouteTableName')]",
             "apiVersion": "2018-01-01",
             "location": "[resourceGroup().location]",
-            "scale": null,
+            "tags": {
+                "Owner": "[parameters('OwnerTag')]",
+                "Email": "[parameters('EmailTag')]"
+            },
             "properties": {
                 "provisioningState": "Succeeded",
                 "disableBgpRoutePropagation": false,
@@ -1307,15 +1277,6 @@
                         "properties": {
                             "provisioningState": "Succeeded",
                             "addressPrefix": "[parameters('AppGatewaySubnetPrefix')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "3.3.3.3"
-                        }
-                    },
-                    {
-                        "name": "[variables('ManagementRouteName')]",
-                        "properties": {
-                            "provisioningState": "Succeeded",
-                            "addressPrefix": "[parameters('ManagementSubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "3.3.3.3"
                         }
@@ -1404,10 +1365,9 @@
             "dependsOn": []
         },
         {
-            "condition": "[equals(parameters('deploydev'),'Yes')]",
-            "apiVersion": "2017-05-10",
-            "name": "Nested_DevelopmentResources",
             "type": "Microsoft.Resources/deployments",
+            "name": "Nested_DevelopmentResources",
+            "apiVersion": "2017-05-10",
             "subscriptionId": "[parameters('DevSubscriptionId')]",
             "resourceGroup": "[parameters('DevResourceGroup')]",
             "properties": {
@@ -1425,6 +1385,8 @@
                             "apiVersion": "2015-06-15",
                             "dependsOn": [],
                             "tags": {
+                                "Owner": "[parameters('OwnerTag')]",
+                                "Email": "[parameters('EmailTag')]"
                             },
                             "properties": {
                                 "addressSpace": {
@@ -1459,6 +1421,10 @@
                             "name": "[parameters('DevApplicationRouteTableName')]",
                             "apiVersion": "2018-01-01",
                             "location": "[resourceGroup().location]",
+                            "tags": {
+                                "Owner": "[parameters('OwnerTag')]",
+                                "Email": "[parameters('EmailTag')]"
+                            },
                             "scale": null,
                             "properties": {
                                 "provisioningState": "Succeeded",
@@ -1487,15 +1453,6 @@
                                         "properties": {
                                             "provisioningState": "Succeeded",
                                             "addressPrefix": "[parameters('AppGatewaySubnetPrefix')]",
-                                            "nextHopType": "VirtualAppliance",
-                                            "nextHopIpAddress": "3.3.3.3"
-                                        }
-                                    },
-                                    {
-                                        "name": "[variables('ManagementRouteName')]",
-                                        "properties": {
-                                            "provisioningState": "Succeeded",
-                                            "addressPrefix": "[parameters('ManagementSubnetPrefix')]",
                                             "nextHopType": "VirtualAppliance",
                                             "nextHopIpAddress": "3.3.3.3"
                                         }
@@ -1588,6 +1545,10 @@
                             "name": "[parameters('DevDataRouteTableName')]",
                             "apiVersion": "2018-01-01",
                             "location": "[resourceGroup().location]",
+                            "tags": {
+                                "Owner": "[parameters('OwnerTag')]",
+                                "Email": "[parameters('EmailTag')]"
+                            },
                             "scale": null,
                             "properties": {
                                 "provisioningState": "Succeeded",
@@ -1616,15 +1577,6 @@
                                         "properties": {
                                             "provisioningState": "Succeeded",
                                             "addressPrefix": "[parameters('AppGatewaySubnetPrefix')]",
-                                            "nextHopType": "VirtualAppliance",
-                                            "nextHopIpAddress": "3.3.3.3"
-                                        }
-                                    },
-                                    {
-                                        "name": "[variables('ManagementRouteName')]",
-                                        "properties": {
-                                            "provisioningState": "Succeeded",
-                                            "addressPrefix": "[parameters('ManagementSubnetPrefix')]",
                                             "nextHopType": "VirtualAppliance",
                                             "nextHopIpAddress": "3.3.3.3"
                                         }
@@ -1717,6 +1669,10 @@
                             "name": "[parameters('DevWebRouteTableName')]",
                             "apiVersion": "2018-01-01",
                             "location": "[resourceGroup().location]",
+                            "tags": {
+                                "Owner": "[parameters('OwnerTag')]",
+                                "Email": "[parameters('EmailTag')]"
+                            },
                             "scale": null,
                             "properties": {
                                 "provisioningState": "Succeeded",
@@ -1745,15 +1701,6 @@
                                         "properties": {
                                             "provisioningState": "Succeeded",
                                             "addressPrefix": "[parameters('AppGatewaySubnetPrefix')]",
-                                            "nextHopType": "VirtualAppliance",
-                                            "nextHopIpAddress": "3.3.3.3"
-                                        }
-                                    },
-                                    {
-                                        "name": "[variables('ManagementRouteName')]",
-                                        "properties": {
-                                            "provisioningState": "Succeeded",
-                                            "addressPrefix": "[parameters('ManagementSubnetPrefix')]",
                                             "nextHopType": "VirtualAppliance",
                                             "nextHopIpAddress": "3.3.3.3"
                                         }
@@ -1841,15 +1788,15 @@
                             },
                             "dependsOn": []
                         }
-                    ] 
+                    ]
                 }
-            }
+            },
+            "condition": "[equals(parameters('deploydev'),'Yes')]"
         },
         {
-            "condition": "[equals(parameters('deploydev'),'Yes')]",
-            "apiVersion": "2018-01-01",
-            "name": "Nested_DevelopmentPeering",
             "type": "Microsoft.Resources/deployments",
+            "name": "Nested_DevelopmentPeering",
+            "apiVersion": "2018-01-01",
             "subscriptionId": "[parameters('DevSubscriptionId')]",
             "resourceGroup": "[parameters('DevResourceGroup')]",
             "properties": {
@@ -1865,28 +1812,29 @@
                             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
                             "apiVersion": "2017-10-01",
                             "properties": {
-                              "allowVirtualNetworkAccess": "true",
-                              "allowForwardedTraffic": "true",
-                              "allowGatewayTransit": "false",
-                              "useRemoteGateways": "true",
-                              "remoteVirtualNetwork": {
-                                "id": "[variables('ProdVNetID')]"
-                              },
-                              "remoteAddressSpace": {
-                                "addressPrefixes": [
-                                  "[parameters('ProdVNetPrefix')]"
-                                ]
-                              }
+                                "allowVirtualNetworkAccess": "true",
+                                "allowForwardedTraffic": "true",
+                                "allowGatewayTransit": "false",
+                                "useRemoteGateways": "true",
+                                "remoteVirtualNetwork": {
+                                    "id": "[variables('ProdVNetID')]"
+                                },
+                                "remoteAddressSpace": {
+                                    "addressPrefixes": [
+                                        "[parameters('ProdVNetPrefix')]"
+                                    ]
+                                }
                             }
                         }
-                    ] 
+                    ]
                 }
             },
             "dependsOn": [
                 "[concat('Microsoft.Resources/deployments/', 'Nested_DevelopmentResources')]",
                 "[concat('Microsoft.Network/virtualNetworks/', parameters('ProdVNetName'))]",
                 "[concat('Microsoft.Network/virtualNetworkGateways/', parameters('VNetGatewayName'))]"
-            ]
+            ],
+            "condition": "[equals(parameters('deploydev'),'Yes')]"
         }
     ]
 }

@@ -2,6 +2,20 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "OwnerTag": {
+          "defaultValue": "Operations",
+          "type": "String",
+          "metadata": {
+              "description": "Tags all resources created with Owner's name"
+          }
+        },
+        "EmailTag": {
+          "defaultValue": "operations@contoso.com",
+          "type": "String",
+          "metadata": {
+              "description": "Tags all resources created with Owner's Email"
+          }
+        },
         "adminUserName": {
             "type": "string",
             "minLength": 1,
@@ -59,8 +73,8 @@
             "dependsOn": [
             ],
             "tags": {
-              "displayName": "NICS - AADSQL",
-              "Workloads": "Identity"
+              "Owner": "[parameters('OwnerTag')]",
+              "Email": "[parameters('EmailTag')]"
             },
             "properties": {
               "ipConfigurations": [
@@ -85,8 +99,8 @@
               "[concat('Microsoft.Network/networkInterfaces/', parameters('serveraadsqlfqdn'),'-nic')]"
             ],
             "tags": {
-              "displayName": "Servers - AADSQL",
-              "Workloads": "Identity"
+              "Owner": "[parameters('OwnerTag')]",
+              "Email": "[parameters('EmailTag')]"
             },
             "properties": {
               "hardwareProfile": {

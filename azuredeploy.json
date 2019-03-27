@@ -2,7 +2,21 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "adminUserName": {
+      "OwnerTag": {
+        "defaultValue": "Operations",
+        "type": "String",
+        "metadata": {
+            "description": "Tags all resources created with Owner's name"
+        }
+      },
+      "EmailTag": {
+        "defaultValue": "operations@contoso.com",
+        "type": "String",
+        "metadata": {
+            "description": "Tags all resources created with Owner's Email"
+        }
+      },  
+      "adminUserName": {
             "type": "string",
             "minLength": 1,
             "defaultValue": "serveradmin",
@@ -194,6 +208,8 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "OwnerTag": {"value": "[parameters('OwnerTag')]"},
+                    "EmailTag": {"value": "[parameters('EmailTag')]"},
                     "adminUserName": {"value": "[parameters('adminUserName')]"},
                     "adminPassword": {"value": "[parameters('adminPassword')]"},
                     "vnetID": {"value": "[variables('vnetID')]"},
@@ -218,6 +234,8 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                  "OwnerTag": {"value": "[parameters('OwnerTag')]"},
+                  "EmailTag": {"value": "[parameters('EmailTag')]"},
                   "adminUserName": {"value": "[parameters('adminUserName')]"},
                   "adminPassword": {"value": "[parameters('adminPassword')]"},
                   "vnetID": {"value": "[variables('vnetID')]"},
@@ -241,6 +259,8 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                  "OwnerTag": {"value": "[parameters('OwnerTag')]"},
+                  "EmailTag": {"value": "[parameters('EmailTag')]"},
                   "adminUserName": {"value": "[parameters('adminUserName')]"},
                   "adminPassword": {"value": "[parameters('adminPassword')]"},
                   "vnetID": {"value": "[variables('vnetID')]"},
@@ -263,6 +283,8 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                  "OwnerTag": {"value": "[parameters('OwnerTag')]"},
+                  "EmailTag": {"value": "[parameters('EmailTag')]"},
                   "adminUserName": {"value": "[parameters('adminUserName')]"},
                   "adminPassword": {"value": "[parameters('adminPassword')]"},
                   "vnetID": {"value": "[variables('vnetID')]"},
